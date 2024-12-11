@@ -18,27 +18,28 @@ if flag[1] == "s" or flag[1] == "m":
         t = int(sys.argv[2])
         unit_display = 'second' if flag[1] == 's' else 'minute'
         reminder = ' '.join(sys.argv[3::]) if len(sys.argv[3::]) != 0 else f"{t} {unit_display} reminder"
-    except Exception:
+    
+        if not os.path.exists(TEMP_FOLDER_LOCATION):
+            os.mkdir(TEMP_FOLDER_LOCATION)
+
+        open(TEMP_FILE_LOCATION, "a").close()
+
+        config = read_temp_toml_file(TEMP_FILE_LOCATION)
+        config[reminder] = [str(t), str(flag[1])]
+
+        write_temp_toml_file(config, TEMP_FILE_LOCATION)
+
+        rich.print(f"Reminder for: [bold green]{reminder} set for [italic yellow]{t} {unit_display}")
+        time.sleep(t if flag[1] == "s" else t * 60)
+        os.system(f'notify-send -t 4000 "{reminder}"')
+        os.system("paplay ../tests/testing.mp3")
+
+        del config[reminder]
+
+        write_temp_toml_file(config, TEMP_FILE_LOCATION)
+
+    except ValueError:
         rich.print("[bold red]Please use the command format: [bold green]remindme -[s|m] [time] [reminder]")
-
-    if not os.path.exists(TEMP_FOLDER_LOCATION):
-        os.mkdir(TEMP_FOLDER_LOCATION)
-
-    open(TEMP_FILE_LOCATION, "a").close()
-
-    config = read_temp_toml_file(TEMP_FILE_LOCATION)
-    config[reminder] = [str(t), str(flag[1])]
-
-    write_temp_toml_file(config, TEMP_FILE_LOCATION)
-
-    rich.print(f"Reminder for: [bold green]{reminder} set for [italic yellow]{t} {unit_display}")
-    time.sleep(t if flag[1] == "s" else t * 60)
-    os.system(f'notify-send -t 4000 "{reminder}"')
-    os.system("paplay ../tests/testing.mp3")
-
-    del config[reminder]
-
-    write_temp_toml_file(config, TEMP_FILE_LOCATION)
 
 elif flag[1] == "l":
     try:
@@ -53,10 +54,10 @@ elif flag[1] == "l":
             for key, value in config.items():
                 unit_display = 'second' if value[-1] == 's' else 'minute'
                 rich.print(f"[bold cyan]{i}.) [bold green]Reminder: {key} ==> [bold yellow]set for {value[0]} {unit_display}")
-                i+=1
+                i += 1
             print("\n")
 
-    except FileNotFoundError as fnfe:
+    except FileNotFoundError:
         rich.print("[bold red]No reminders have been set yet!")
 
 elif flag[1] == "d":
@@ -73,15 +74,15 @@ elif flag[1] == "d":
             write_temp_toml_file(config, TEMP_FILE_LOCATION)
 
             rich.print(f"[bold green]{reminder_to_kill} successfully stopped!")
-        
         else:
             raise Exception("This reminder does not exist.")
 
-    except:
-        pass
+    except FileNotFoundError:
+        rich.print("[bold red]No reminders have been set yet!")
 
 elif flag[1] == "help":
-    pass
+    rich.print("[bold orange]Creates a reminder for a set amount of time and notifies you once the reminder is done using your system's notification daemon (can configure for your own notification daemon)")
 elif flag[1] == "conf":
     pass
-
+else:
+    rich.print("[bold red]Not a valid command. Please use: [bold green]remindme -help")
