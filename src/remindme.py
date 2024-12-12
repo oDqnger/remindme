@@ -3,6 +3,7 @@ from utils import (
     write_temp_toml_file,
     TEMP_FILE_LOCATION,
     TEMP_FOLDER_LOCATION,
+    USER_CONFIG_FILE_LOCATION,
 )
 import os
 import sys
@@ -29,10 +30,12 @@ if flag[1] == "s" or flag[1] == "m":
 
         write_temp_toml_file(config, TEMP_FILE_LOCATION)
 
+        user_config = read_temp_toml_file(USER_CONFIG_FILE_LOCATION)
+        
         rich.print(f"Reminder for: [bold green]{reminder} set for [italic yellow]{t} {unit_display}")
         time.sleep(t if flag[1] == "s" else t * 60)
-        os.system(f'notify-send -t 4000 "{reminder}"')
-        os.system("paplay ../tests/testing.mp3")
+        os.system(f"{user_config['notification_daemon_notify_command']} {reminder}")
+        os.system(f"paplay {user_config['music_file_path']}")
 
         del config[reminder]
 
@@ -80,8 +83,10 @@ elif flag[1] == "d":
     except FileNotFoundError:
         rich.print("[bold red]No reminders have been set yet!")
 
-elif flag[1] == "help":
+elif flag[1] == "h":
     rich.print("[bold orange]Creates a reminder for a set amount of time and notifies you once the reminder is done using your system's notification daemon (can configure for your own notification daemon)")
+    rich.print("[bold green]Usage: remindme [OPTION] TIME [REASON/REMINDER...]")
+    rich.print("[bold white]Arguments:\n\t[bold red]-s\t\t\t[bold green]setting a reminder using seconds\n\t")
 elif flag[1] == "conf":
     pass
 else:
