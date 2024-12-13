@@ -1,0 +1,4 @@
+# Configure the music that needs to be played
+music_file_path="/usr/share/remindme/music/testing.mp3"
+# Configure the notification daemon to be used.
+notification_daemon_notify_command='notify-send -t 4000' # example of a notification daemon that uses this command is dunst. This most likely won't change but it's here just in case.

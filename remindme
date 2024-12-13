@@ -1,1 +1,1 @@
-python ../src/remindme.py $@ &
+./usr/share/remindme/remindme $@ &

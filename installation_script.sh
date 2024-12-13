@@ -1,4 +1,8 @@
 mkdir /usr/share/remindme
 mkdir /usr/share/remindme/music
-curl github_link_for_py_script --output /usr/share/remindme
-curl github_link_for_remindme_script --output path_var
+mkdir ~/.config/remindme/
+# curl config.toml file and put it in config folder
+# curl sample_music.mp3 and put it in usr/share/music folder
+# curl python_script and put it in usr/share/ folder
+# curl remindme sh script and put it in $PATH location
+
