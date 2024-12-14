@@ -1,1 +1,1 @@
-./usr/share/remindme/remindme $@ &
+./dist/remindme $@ &
