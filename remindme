@@ -1,1 +1,1 @@
-./dist/remindme $@ &
+./dist/remindme_python $@ &
