@@ -1,1 +1,1 @@
-./usr/share/remindme/remindme_python $@ &
+(cd /usr/share/remindme ; ./remindme_python $@ &)
