@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from utils import (
     read_temp_toml_file,
     write_temp_toml_file,
